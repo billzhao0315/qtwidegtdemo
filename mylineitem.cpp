@@ -1,16 +1,24 @@
 #include "mylineitem.h"
 
-MyLineItem::MyLineItem(qreal x1, qreal y1, qreal x2, qreal y2, QGraphicsItem *parent):QGraphicsLineItem(x1, y1, x2, y2, parent)
+MyLineItem::MyLineItem(qreal x1, qreal y1, qreal x2, qreal y2,int index, QGraphicsItem *parent):QGraphicsLineItem(x1, y1, x2, y2, parent)
 {
-    m_colorFlag = false;
+    m_colorFlag = true;
+    m_index = index;
 }
-MyLineItem::MyLineItem(const QLineF &line, QGraphicsItem *parent):QGraphicsLineItem(line, parent)
+MyLineItem::MyLineItem(const QLineF &line,int index, QGraphicsItem *parent):QGraphicsLineItem(line, parent)
 {
-    m_colorFlag = false;
+    m_colorFlag = true;
+    m_index = index;
 }
-MyLineItem::MyLineItem(QGraphicsItem *parent):QGraphicsLineItem(parent)
+MyLineItem::MyLineItem(int index, QGraphicsItem *parent):QGraphicsLineItem(parent)
 {
-    m_colorFlag = false;
+    m_colorFlag = true;
+    m_index = index;
+}
+
+void MyLineItem::setIndex(int index)
+{
+    m_index = index;
 }
 void MyLineItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
@@ -27,18 +35,39 @@ void MyLineItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 //        setPos(tmpX, tmpY);
 //    }
     //emit posChanged(m_index);
-    QGraphicsItem::mouseReleaseEvent(event);
+    QGraphicsLineItem::mouseReleaseEvent(event);
 }
 void MyLineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     //emit posChanged(m_index);
-    QGraphicsItem::mouseMoveEvent(event);
+    QGraphicsLineItem::mouseMoveEvent(event);
 }
 
 void MyLineItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     m_colorFlag = !m_colorFlag;
-    QGraphicsItem::mouseDoubleClickEvent(event);
+    QGraphicsLineItem::mouseDoubleClickEvent(event);
+    emit addNodeItem(m_index);
+    update();
+}
+
+void MyLineItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
+    if(event->type() == QEvent::Enter)
+    {
+        m_colorFlag = !m_colorFlag;
+    }
+    QGraphicsLineItem::hoverEnterEvent(event);
+    update();
+}
+
+void MyLineItem::focusInEvent(QFocusEvent *event)
+{
+    if(event->type() == QEvent::Enter)
+    {
+        m_colorFlag = !m_colorFlag;
+    }
+    QGraphicsLineItem::focusInEvent(event);
     update();
 }
 
@@ -50,7 +79,7 @@ void MyLineItem::paint(QPainter *painter,const QStyleOptionGraphicsItem *option,
         pent.setColor(Qt::blue);
     else
         pent.setColor(Qt::red);
-    pent.setWidth(3);
+    pent.setWidth(5);
     painter->setPen(pent);
     painter->drawLine(line());
     //QGraphicsLineItem::paint(painter,option,widget);

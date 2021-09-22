@@ -18,12 +18,15 @@
 class MyItem :public QObject ,public QGraphicsItem
 {
     Q_OBJECT
+    Q_INTERFACES(QGraphicsItem)
 public:
     MyItem(double radius, double Radius, int index);
     ~MyItem();
     QRectF boundingRect() const;
     void paint(QPainter *painter,const QStyleOptionGraphicsItem *option,QWidget *widget);
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    void setIndex(int index);
+    void updateRadius(double radius);
     signals:
     void posChanged(int index);
 

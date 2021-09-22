@@ -27,6 +27,21 @@ QRectF MyItem::boundingRect() const
                   2*m_radius, 2*m_radius);
 }
 
+void MyItem::setIndex(int index)
+{
+    m_index = index;
+}
+
+void MyItem::updateRadius(double radius)
+{
+    if(m_radius != radius)
+    {
+        m_radius = radius;
+        update();
+    }
+    //m_radius = radius;
+}
+
 void MyItem::paint(QPainter *painter,const QStyleOptionGraphicsItem *option,QWidget *widget)
 {
     if(m_colorFlag)

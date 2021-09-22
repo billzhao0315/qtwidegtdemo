@@ -49,27 +49,74 @@ void MainWindow::posChanged(int index)
     if(index ==0)
     {
         m_scene->removeItem( lineItem[0] );
-        lineItem[0] = new MyLineItem(item[0]->pos().x(), item[0]->pos().y(), item[1]->pos().x(), item[1]->pos().y());
+        lineItem[0] = new MyLineItem(item[0]->pos().x(), item[0]->pos().y(), item[1]->pos().x(), item[1]->pos().y(), 0);
                 //m_scene->addLine(item[0]->pos().x(), item[0]->pos().y(), item[1]->pos().x(), item[1]->pos().y());
         m_scene->addItem(lineItem[0]);
+        QObject::connect(lineItem[0], &MyLineItem::addNodeItem, this, &MainWindow::addNodeItem);
         return;
     }
     if(index == m_steelNum-1)
     {
         m_scene->removeItem( lineItem[m_steelNum-2] );
-        lineItem[m_steelNum-2] = new MyLineItem(item[m_steelNum-2]->pos().x(), item[m_steelNum-2]->pos().y(), item[m_steelNum-1]->pos().x(), item[m_steelNum-1]->pos().y());
+        lineItem[m_steelNum-2] = new MyLineItem(item[m_steelNum-2]->pos().x(), item[m_steelNum-2]->pos().y(), item[m_steelNum-1]->pos().x(), item[m_steelNum-1]->pos().y(), m_steelNum-2);
                 //m_scene->addLine(item[m_steelNum-2]->pos().x(), item[m_steelNum-2]->pos().y(), item[m_steelNum-1]->pos().x(), item[m_steelNum-1]->pos().y());
         m_scene->addItem(lineItem[m_steelNum-2]);
+        QObject::connect(lineItem[m_steelNum-2], &MyLineItem::addNodeItem, this, &MainWindow::addNodeItem);
         return;
     }
     m_scene->removeItem( lineItem[index-1] );
     m_scene->removeItem( lineItem[index] );
-    lineItem[index-1] = new MyLineItem(item[index-1]->pos().x(), item[index-1]->pos().y(), item[index]->pos().x(), item[index]->pos().y());
+    lineItem[index-1] = new MyLineItem(item[index-1]->pos().x(), item[index-1]->pos().y(), item[index]->pos().x(), item[index]->pos().y(), index-1);
             //m_scene->addLine(item[index-1]->pos().x(), item[index-1]->pos().y(), item[index]->pos().x(), item[index]->pos().y());
     m_scene->addItem(lineItem[index-1]);
-    lineItem[index] = new MyLineItem(item[index]->pos().x(), item[index]->pos().y(), item[index+1]->pos().x(), item[index+1]->pos().y());
+    QObject::connect(lineItem[index-1], &MyLineItem::addNodeItem, this, &MainWindow::addNodeItem);
+    lineItem[index] = new MyLineItem(item[index]->pos().x(), item[index]->pos().y(), item[index+1]->pos().x(), item[index+1]->pos().y(), index);
             //m_scene->addLine(item[index]->pos().x(), item[index]->pos().y(), item[index+1]->pos().x(), item[index+1]->pos().y());
     m_scene->addItem(lineItem[index]);
+    QObject::connect(lineItem[index], &MyLineItem::addNodeItem, this, &MainWindow::addNodeItem);
+}
+
+void MainWindow::addNodeItem(int index)
+{
+    m_steelNum = m_steelNum +1;
+    //double angle = 1.0*3.14*2/m_steelNum;
+    int radius;
+
+    //set radius value
+    if(m_steelNum<7)
+        radius = 15;
+    else if(m_steelNum<11)
+        radius = 10;
+    else
+        radius = 15;
+    for (int var = 0; var < m_steelNum-1; ++var) {
+        item[var]->updateRadius(radius);
+    }
+    for (int i = m_steelNum-1; i > index+1; --i) {
+        item[i] = item[i-1];
+        item[i]->setIndex(i);
+    }
+    // add item
+    item[index+1] = new MyItem(radius, RADIUS,index+1);
+    double addNodeX = (item[index]->pos().x() + item[index+2]->pos().x())/2;
+    double addNodeY = (item[index]->pos().y() + item[index+2]->pos().y())/2;
+    item[index+1]->setPos( addNodeX, addNodeY);
+    item[index+1]->setToolTip(QString::number(index+1));
+    m_scene->addItem(item[index+1]);
+    QObject::connect(item[index+1], &MyItem::posChanged, this, &MainWindow::posChanged);
+    // add new line
+    for (int i = m_steelNum-2; i > index; --i) {
+        lineItem[i] = lineItem[i-1];
+        lineItem[i]->setIndex(i);
+    }
+    m_scene->removeItem(lineItem[index]);
+    //m_scene->removeItem(lineItem[index+1]);
+    lineItem[index] = new MyLineItem(item[index]->pos().x(), item[index]->pos().y(), addNodeX, addNodeY, index);
+    m_scene->addItem(lineItem[index]);
+    QObject::connect(lineItem[index], &MyLineItem::addNodeItem, this, &MainWindow::addNodeItem);
+    lineItem[index+1] = new MyLineItem(addNodeX, addNodeY, item[index+2]->pos().x(), item[index+2]->pos().y(), index+1);
+    m_scene->addItem(lineItem[index+1]);
+    QObject::connect(lineItem[index+1], &MyLineItem::addNodeItem, this, &MainWindow::addNodeItem);
 }
 
 void MainWindow::on_spinBox_valueChanged(int num)
@@ -131,9 +178,10 @@ void MainWindow::on_spinBox_valueChanged(int num)
     }
     for(int i=0; i<m_steelNum-1; i++)
     {
-        lineItem[i] = new MyLineItem(item[i]->pos().x(), item[i]->pos().y(), item[i+1]->pos().x(), item[i+1]->pos().y());
+        lineItem[i] = new MyLineItem(item[i]->pos().x(), item[i]->pos().y(), item[i+1]->pos().x(), item[i+1]->pos().y(), i);
                 //m_scene->addLine(item[i]->pos().x(), item[i]->pos().y(), item[i+1]->pos().x(), item[i+1]->pos().y());
         m_scene->addItem( lineItem[i] );
+        QObject::connect(lineItem[i], &MyLineItem::addNodeItem, this, &MainWindow::addNodeItem);
     }
 
 }
