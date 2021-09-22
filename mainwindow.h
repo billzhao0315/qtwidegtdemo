@@ -3,6 +3,7 @@
 
 #include "myitem.h"
 #include "mylineitem.h"
+#include "qaxis.h"
 #include <QMainWindow>
 
 namespace Ui {
@@ -25,6 +26,7 @@ private:
     Ui::MainWindow *ui;
     MyItem *item[50];
     MyLineItem *lineItem[49];
+    QAxis* m_axis;
     int m_steelNum;
     QGraphicsScene *m_scene;
 

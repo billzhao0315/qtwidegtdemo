@@ -53,7 +53,7 @@ void MyItem::paint(QPainter *painter,const QStyleOptionGraphicsItem *option,QWid
     //painter->save();
     //painter->setPen(Qt::green);
     //painter->drawText(QPointF(0,0), QString::number(m_index)+ ":(" + QString::number(pos().x()) + "," + QString::number(-pos().y()) + ")");
-    this->setToolTip(QString::number(m_index)+ ":(" + QString::number(pos().x()) + "," + QString::number(-pos().y()) + ")");
+    this->setToolTip(QString::number(m_index)+ ":(" + QString::number(pos().x()) + "," + QString::number(pos().y()) + ")");
     //painter->restore();
     //QGraphicsItem::paint(painter,option,widget);
 }

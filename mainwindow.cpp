@@ -7,8 +7,8 @@
 #include <math.h>
 
 #define RADIUS 100
-#define SCENEX -200
-#define SCENEY -200
+#define SCENEX 0
+#define SCENEY 0
 #define SCENEWidth 400
 #define SCENEHEIGHT 400
 
@@ -28,7 +28,24 @@ MainWindow::MainWindow(QWidget *parent) :
     item[0] = NULL;
     lineItem[0] = NULL;
     on_spinBox_valueChanged(m_steelNum);
+    m_axis = new QAxis(SCENEX, SCENEY, SCENEWidth, SCENEHEIGHT);
+    {
+        m_axis->setXValueRange(0, 10);
+        m_axis->setYValueRange(0, 10);
 
+        m_axis->setXLabels("0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10");
+        m_axis->setYLabels("0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10");
+
+        m_axis->setAutoScale("X", true);
+        m_axis->setAutoScale("Y", true);
+
+        m_axis->addCurve("testCurve");
+        m_axis->setGridShow(true);
+        m_axis->addData("testCurve", 0, 0);
+        m_axis->addData("testCurve", 2, 2);
+        m_axis->addData("testCurve", 5, 3);
+    }
+    m_scene->addItem(m_axis);
     QGraphicsView *view = new QGraphicsView(m_scene);
 
     view->show();
@@ -171,7 +188,7 @@ void MainWindow::on_spinBox_valueChanged(int num)
     for(int i=0; i<m_steelNum; i++)
     {
         item[i] = new MyItem(radius, RADIUS,i);
-        item[i]->setPos(startPointX+ widthSpace*i, -(startPointY+heightSpace*i));
+        item[i]->setPos(startPointX+ widthSpace*i, (startPointY+heightSpace*i));
         item[i]->setToolTip(QString::number(i));
         m_scene->addItem(item[i]);
         QObject::connect(item[i], &MyItem::posChanged, this, &MainWindow::posChanged);

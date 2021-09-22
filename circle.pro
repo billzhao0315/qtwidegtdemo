@@ -9,15 +9,19 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    curve.cpp \
     main.cpp \
     mainwindow.cpp \
     myitem.cpp \
-    mylineitem.cpp
+    mylineitem.cpp \
+    qaxis.cpp
 
 HEADERS += \
+    curve.h \
     mainwindow.h \
     myitem.h \
-    mylineitem.h
+    mylineitem.h \
+    qaxis.h
 
 FORMS += \
     mainwindow.ui
