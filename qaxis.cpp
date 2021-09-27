@@ -6,14 +6,14 @@
 
 QAxis::QAxis(double x, double y, double width, double height, QGraphicsItem *parent) : QGraphicsItem(parent)
 {
-    m_xPosMin = 20;
-    m_xPosMax = 365;
-    m_yPosMin = 20;
-    m_yPosMax = 365;
-//    m_xPosMin = x;
-//    m_xPosMax = x + width;
-//    m_yPosMin = y;
-//    m_yPosMax = y+height;
+//    m_xPosMin = 20;
+//    m_xPosMax = 365;
+//    m_yPosMin = 20;
+//    m_yPosMax = 365;
+    m_xPosMin = x;
+    m_xPosMax = x+width;
+    m_yPosMin = y;
+    m_yPosMax = y+height;
 
     m_xRange = m_xPosMax - m_xPosMin - 20;
     m_yRange = m_yPosMax - m_yPosMin - 20;
@@ -22,8 +22,8 @@ QAxis::QAxis(double x, double y, double width, double height, QGraphicsItem *par
     m_gridFlag = false;
     m_xAutoScale = false;
     m_yAutoScale = false;
-    //m_direction = "up";
-    m_direction = "down";
+    m_direction = "up";
+    //m_direction = "down";
     m_xTitle = "x";
     m_yTitle = "y";
     m_xLabelLinePenSize = 0.5;

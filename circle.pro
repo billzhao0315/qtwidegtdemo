@@ -14,6 +14,7 @@ SOURCES += \
     mainwindow.cpp \
     myitem.cpp \
     mylineitem.cpp \
+    myqgraphicsview.cpp \
     qaxis.cpp
 
 HEADERS += \
@@ -21,6 +22,7 @@ HEADERS += \
     mainwindow.h \
     myitem.h \
     mylineitem.h \
+    myqgraphicsview.h \
     qaxis.h
 
 FORMS += \

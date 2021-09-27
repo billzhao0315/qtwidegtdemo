@@ -79,7 +79,7 @@ void MyLineItem::paint(QPainter *painter,const QStyleOptionGraphicsItem *option,
         pent.setColor(Qt::blue);
     else
         pent.setColor(Qt::red);
-    pent.setWidth(5);
+    pent.setWidth(2);
     painter->setPen(pent);
     painter->drawLine(line());
     //QGraphicsLineItem::paint(painter,option,widget);
