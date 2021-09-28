@@ -87,6 +87,7 @@ private:
     void initXYState();
     void upDateXLabels();
     void upDateYLabels();
+    int  getLabelsNumber(QString xy);
     QVector<QPointF> m_data;
     //QList<Curve*> m_curveList;
     QMap<QString, Curve*> m_curveList;

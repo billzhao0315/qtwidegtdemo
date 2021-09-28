@@ -35,8 +35,8 @@ MainWindow::MainWindow(QWidget *parent) :
     on_spinBox_valueChanged(m_steelNum);
     m_axis = new QAxis(SCENEX, SCENEY, SCENEWidth, SCENEHEIGHT);
     {
-        m_axis->setXValueRange(0, 10);
-        m_axis->setYValueRange(0, 10);
+        m_axis->setXValueRange(0, 255);
+        m_axis->setYValueRange(0, 255);
 
         m_axis->setXLabels("0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10");
         m_axis->setYLabels("0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10");
@@ -47,8 +47,10 @@ MainWindow::MainWindow(QWidget *parent) :
         m_axis->addCurve("testCurve");
         m_axis->setGridShow(true);
         m_axis->addData("testCurve", 0, 0);
-        m_axis->addData("testCurve", 2, 2);
-        m_axis->addData("testCurve", 5, 3);
+        m_axis->addData("testCurve", 21, 21);
+        m_axis->addData("testCurve", 106, 106);
+        m_axis->addData("testCurve", 121, 121);
+        m_axis->addData("testCurve", 255, 255);
     }
     m_scene->addItem(m_axis);
     m_view = new MyQGraphicsView(m_scene);

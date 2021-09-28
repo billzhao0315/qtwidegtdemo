@@ -36,9 +36,9 @@ QAxis::QAxis(double x, double y, double width, double height, QGraphicsItem *par
     m_yLabelsPos.clear();
 
     m_xMin = 0;
-    m_xMax = 100;
+    m_xMax = 255;
     m_yMin = 0;
-    m_yMax = 100;
+    m_yMax = 255;
 
     m_firstPoint = false;
 
@@ -805,14 +805,15 @@ void QAxis::upDateXLabels()
     m_xValueRange = m_xMax - m_xMin;
 
     m_xLabels.append(QString::number(m_xMax, 'f', 0));
+    int labelNumber = getLabelsNumber("x");
 
     if(m_xMax != 0)
     {
         m_xLabels.clear();
-        double tmp = m_xValueRange/10;
+        double tmp = m_xValueRange/labelNumber;
         QString t = QString::number(tmp, 'f', 0);
         tmp = t.toDouble();
-        for(int i=0; i<10; i++)
+        for(int i=0; i<labelNumber; i++)
         {
             double tmpX = m_xMin + i*tmp;
 
@@ -821,7 +822,7 @@ void QAxis::upDateXLabels()
 
             m_xLabels.append(QString::number(tmpX, 'f', 0) + ",");
         }
-        m_xLabels.append(QString::number(m_xMin + 10*tmp, 'f', 0));
+        m_xLabels.append(QString::number(m_xMin + labelNumber*tmp, 'f', 0));
     }
 
     QMap<QString, Curve*>::const_iterator cur;
@@ -854,24 +855,25 @@ void QAxis::upDateYLabels()
 
     m_yValueRange = m_yMax - m_yMin;
 
-    m_yLabels.append(QString::number(m_yMax, 'f', 2));
+    m_yLabels.append(QString::number(m_yMax, 'f', 0));
+    int labelNumber = getLabelsNumber("y");
 
     if(m_yMax != 0)
     {
         m_yLabels.clear();
-        double tmp = m_yValueRange/10;      
-        QString t = QString::number(tmp, 'f', 3);
+        double tmp = m_yValueRange/labelNumber;
+        QString t = QString::number(tmp, 'f', 0);
         tmp = t.toDouble();
-        for(int i=0; i<10; i++)
+        for(int i=0; i<labelNumber; i++)
         {
             double tmpY = m_yMin + i*tmp;
 
             if(tmpY > m_yMax)
                 break;
 
-            m_yLabels.append(QString::number(tmpY, 'f', 2) + ",");
+            m_yLabels.append(QString::number(tmpY, 'f', 0) + ",");
         }
-        m_yLabels.append(QString::number(m_yMin + 10*tmp, 'f', 2));
+        m_yLabels.append(QString::number(m_yMin + labelNumber*tmp, 'f', 0));
     }
 
     QMap<QString, Curve*>::const_iterator cur;
@@ -898,4 +900,39 @@ void QAxis::addTargetLine(QString lineName)
     m_curveList.insert(lineName, new Curve(lineName));
     m_curveList[lineName]->setCurveColor(Qt::red);
     setCurvePointSize(lineName, 0.05);
+}
+
+int  QAxis::getLabelsNumber(QString xy)
+{
+    if(xy == "x")
+    {
+        if(m_xRange < 800)
+        {
+            return 10;
+        }
+        else if( m_xRange < 1600 )
+        {
+            return 20;
+        }
+        else
+        {
+            return 30;
+        }
+    }
+    else
+    {
+        if(m_yRange < 800)
+        {
+            return 10;
+        }
+        else if(m_yRange < 1600)
+        {
+            return 20;
+        }
+        else
+        {
+            return 30;
+        }
+    }
+
 }
