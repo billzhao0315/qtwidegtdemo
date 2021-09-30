@@ -13,6 +13,8 @@ MyItem::MyItem(double radius, double Radius, int index)
     m_radius = radius;
     m_Radius = Radius;
     m_index  = index;
+    m_xOrigin = 0;
+    m_yOrigin = 0;
     setFlags(ItemIsSelectable | ItemIsMovable | ItemSendsGeometryChanges);
 }
 
@@ -42,13 +44,19 @@ void MyItem::updateRadius(double radius)
     //m_radius = radius;
 }
 
+void MyItem::setOriginPoint(double x, double y)
+{
+    m_xOrigin = x;
+    m_yOrigin = y;
+}
+
 void MyItem::paint(QPainter *painter,const QStyleOptionGraphicsItem *option,QWidget *widget)
 {
     if(m_colorFlag)
         painter->setBrush(Qt::blue);
     else
         painter->setBrush(Qt::red);
-
+    painter->translate(m_xOrigin, m_yOrigin);
     painter->drawEllipse(QPointF(0, 0), m_radius, m_radius);
     //painter->save();
     //painter->setPen(Qt::green);
@@ -56,6 +64,7 @@ void MyItem::paint(QPainter *painter,const QStyleOptionGraphicsItem *option,QWid
     this->setToolTip(QString::number(m_index)+ ":(" + QString::number(pos().x()) + "," + QString::number(pos().y()) + ")");
     //painter->restore();
     //QGraphicsItem::paint(painter,option,widget);
+    qDebug()<<"myItem:index"<<m_index<<", pos:"<<pos();
 }
 
 void MyItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
@@ -79,7 +88,7 @@ void MyItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 QVariant MyItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     if (change == ItemPositionChange) {
-        emit posChanged(m_index);
+        //emit posChanged(m_index);
 //        // value is the new position.
 //        QPointF newPos = value.toPointF();
 //        QRectF rect = scene()->sceneRect();

@@ -25,7 +25,7 @@ public:
     void paint(QPainter *painter,const QStyleOptionGraphicsItem *option,QWidget *widget);
     void clearChart();
 
-    void addCurve(QString title);
+    void addCurve(QString title, QGraphicsScene *scene);
     void addData(QString curveName, double tmpX, double tmpY);
     void addVectorData(QString curName, const QVector<QPointF> &data);
     void clearCurveData(QString curveName);
@@ -58,10 +58,12 @@ public:
 
     void setAxisSize(double width, double height);
 
-    void addTargetLine(QString lineName);
+    void addTargetLine(QString lineName, QGraphicsScene *scene);
 
     void upDate();
     QPointF mapToAxis(qreal tempX, qreal tempY) const;
+    QVector<MyItem*> getPosPointData(QString lineName);
+    QVector<MyLineItem*> getPosSegmentData(QString lineName);
 
     inline double getAxisXmin()
     {

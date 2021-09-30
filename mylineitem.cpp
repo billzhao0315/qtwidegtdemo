@@ -1,19 +1,26 @@
 #include "mylineitem.h"
+#include<QDebug>
 
 MyLineItem::MyLineItem(qreal x1, qreal y1, qreal x2, qreal y2,int index, QGraphicsItem *parent):QGraphicsLineItem(x1, y1, x2, y2, parent)
 {
     m_colorFlag = true;
     m_index = index;
+    m_xOrigin = 0;
+    m_yOrigin = 0;
 }
 MyLineItem::MyLineItem(const QLineF &line,int index, QGraphicsItem *parent):QGraphicsLineItem(line, parent)
 {
     m_colorFlag = true;
     m_index = index;
+    m_xOrigin = 0;
+    m_yOrigin = 0;
 }
 MyLineItem::MyLineItem(int index, QGraphicsItem *parent):QGraphicsLineItem(parent)
 {
     m_colorFlag = true;
     m_index = index;
+    m_xOrigin = 0;
+    m_yOrigin = 0;
 }
 
 void MyLineItem::setIndex(int index)
@@ -71,6 +78,12 @@ void MyLineItem::focusInEvent(QFocusEvent *event)
     update();
 }
 
+void MyLineItem::setOriginPoint(double x, double y)
+{
+    m_xOrigin = x;
+    m_yOrigin = y;
+}
+
 void MyLineItem::paint(QPainter *painter,const QStyleOptionGraphicsItem *option,QWidget *widget)
 {
 
@@ -79,8 +92,10 @@ void MyLineItem::paint(QPainter *painter,const QStyleOptionGraphicsItem *option,
         pent.setColor(Qt::blue);
     else
         pent.setColor(Qt::red);
+    painter->translate(m_xOrigin, m_yOrigin);
     pent.setWidth(2);
     painter->setPen(pent);
     painter->drawLine(line());
+    qDebug()<<"myLineItem:index"<<m_index;
     //QGraphicsLineItem::paint(painter,option,widget);
 }

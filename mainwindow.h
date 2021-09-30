@@ -30,8 +30,8 @@ protected:
     void resizeEvent(QResizeEvent *event);
 public slots:
     void on_spinBox_valueChanged(int num);
-    void posChanged(int index);
-    void addNodeItem(int index);
+    //void posChanged(int index);
+    //void addNodeItem(int index);
 
 private:
     Ui::MainWindow *ui;

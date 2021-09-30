@@ -3,12 +3,15 @@
 
 #include <QPen>
 #include <QString>
-
-class Curve
+#include "myitem.h"
+#include "mylineitem.h"
+#include <mutex>
+class QGraphicsScene;
+class Curve: public QObject
 {
-    //Q_OBJECT
+    Q_OBJECT
 public:
-    Curve(QString title);
+    Curve(QString title, QGraphicsScene *scene);
 
     void setTitle(QString title);
     void setTitleShow(bool flag);
@@ -32,6 +35,13 @@ public:
     int getDataSize();
 
     void clearData();
+    int  getRadius();
+    void setOriginPoint(double x, double y);
+    QVector<MyItem*> getPosPointData();
+    QVector<MyLineItem*> getPosSegmentData();
+public slots:
+    void posChanged(int index);
+    void addNodeItem(int index);
 
 private:
     QString m_title;
@@ -40,8 +50,13 @@ private:
     QPen m_pointPen;
     int m_penStyle;
     QVector<QPointF> m_data;
-    QVector<QPointF> m_posData;
+    QVector<MyItem*> m_posPointData;
+    QVector<MyLineItem*> m_posSegmentData;
+    QGraphicsScene *m_scene;
+    double m_xOrigin;
+    double m_yOrigin;
 
+    std::mutex m_mutex;
     int m_dataSize;
 };
 

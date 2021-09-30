@@ -28,6 +28,7 @@ public:
     MyLineItem(int index, QGraphicsItem *parent = nullptr);
     void paint(QPainter *painter,const QStyleOptionGraphicsItem *option,QWidget *widget);
     void setIndex(int index);
+    void setOriginPoint(double x, double y);
 signals:
     void addNodeItem(int index);
 protected:
@@ -39,6 +40,8 @@ protected:
 private:
     bool m_colorFlag;//true:red, flase:black
     int m_index;
+    double m_xOrigin;
+    double m_yOrigin;
 };
 
 #endif // MYLINEITEM_H

@@ -27,8 +27,10 @@ public:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
     void setIndex(int index);
     void updateRadius(double radius);
+    void setOriginPoint(double x, double y);
     signals:
     void posChanged(int index);
+
 
 
 protected:
@@ -42,6 +44,8 @@ private:
 
     bool m_colorFlag;//true:red, flase:black
     int m_index;
+    double m_xOrigin;
+    double m_yOrigin;
 
 };
 

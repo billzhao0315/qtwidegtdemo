@@ -134,9 +134,9 @@ void QAxis::clearChart()
     upDate();
 }
 
-void QAxis::addCurve(QString title)
+void QAxis::addCurve(QString title, QGraphicsScene *scene)
 {
-    m_curveList.insert(title, new Curve(title));
+    m_curveList.insert(title, new Curve(title, scene));
 }
 
 QPointF QAxis::mapToAxis(qreal tmpX, qreal tmpY) const
@@ -278,9 +278,16 @@ void QAxis::setXValueRange(double min, double max)
             double y = cur.value()->getPosData(j).y();
 
             x = (x - m_xMin)/m_xValueRange * m_xRange + m_xPosMin/* - 0.5*/;
-
-            cur.value()->resetPosData(j, QPointF(x, y));
+            cur.value()->resetPosData(j, QPointF(x, y));   
         }
+        if( m_direction == "down")
+        {
+            cur.value()->setOriginPoint(m_xPosMin, m_yPosMin);
+        }
+        else{
+            cur.value()->setOriginPoint(m_xPosMin, m_yPosMax);
+        }
+
     }
 }
 
@@ -305,6 +312,13 @@ void QAxis::setYValueRange(double min, double max)
                 y = -(y - m_yMin)/m_yValueRange * m_yRange /* + m_yPosMin + 0.5 */;
 
             cur.value()->resetPosData(j, QPointF(x, y));
+        }
+        if( m_direction == "down")
+        {
+            cur.value()->setOriginPoint(m_xPosMin, m_yPosMin);
+        }
+        else{
+            cur.value()->setOriginPoint(m_xPosMin, m_yPosMax);
         }
     }
 }
@@ -389,6 +403,13 @@ void QAxis::setDirection(QString d)
                 y = 2*m_yPosMin - y;
                 cur.value()->resetPosData(j, QPointF(x, y));
             }
+            if( m_direction == "down")
+            {
+                cur.value()->setOriginPoint(m_xPosMin, m_yPosMin);
+            }
+            else{
+                cur.value()->setOriginPoint(m_xPosMin, m_yPosMax);
+            }
         }
 
      m_direction = d;
@@ -442,6 +463,13 @@ void QAxis::setAxisSize(double width, double height)
                 y = -(y - m_yMin)/m_yValueRange * m_yRange /* + m_yPosMin + 0.5 */;
 
             cur.value()->resetPosData(j, QPointF(x, y));
+        }
+        if( m_direction == "down")
+        {
+            cur.value()->setOriginPoint(m_xPosMin, m_yPosMin);
+        }
+        else{
+            cur.value()->setOriginPoint(m_xPosMin, m_yPosMax);
         }
     }
 
@@ -853,6 +881,13 @@ void QAxis::upDateXLabels()
 
             cur.value()->resetPosData(j, QPointF(x, y));
         }
+        if( m_direction == "down")
+        {
+            cur.value()->setOriginPoint(m_xPosMin, m_yPosMin);
+        }
+        else{
+            cur.value()->setOriginPoint(m_xPosMin, m_yPosMax);
+        }
     }
 
 }
@@ -908,13 +943,29 @@ void QAxis::upDateYLabels()
 
             cur.value()->resetPosData(j, QPointF(x, y));
         }
+        if( m_direction == "down")
+        {
+            cur.value()->setOriginPoint(m_xPosMin, m_yPosMin);
+        }
+        else{
+            cur.value()->setOriginPoint(m_xPosMin, m_yPosMax);
+        }
     }
 
 }
 
-void QAxis::addTargetLine(QString lineName)
+QVector<MyItem*> QAxis::getPosPointData(QString lineName)
 {
-    m_curveList.insert(lineName, new Curve(lineName));
+    return m_curveList[lineName]->getPosPointData();
+}
+QVector<MyLineItem*> QAxis::getPosSegmentData(QString lineName)
+{
+    return m_curveList[lineName]->getPosSegmentData();
+}
+
+void QAxis::addTargetLine(QString lineName, QGraphicsScene *scene)
+{
+    m_curveList.insert(lineName, new Curve(lineName, scene));
     m_curveList[lineName]->setCurveColor(Qt::red);
     setCurvePointSize(lineName, 0.05);
 }
