@@ -87,6 +87,7 @@ void QAxis::paint(QPainter *painter,const QStyleOptionGraphicsItem *option,QWidg
         for(int j=0; j<cur.value()->getDataSize(); j++)
         {
             QPointF tmp = cur.value()->getPosData(j);
+            qDebug()<<"pinter point"<< tmp;
             m_painter->setPen(cur.value()->getPointPen());
             m_painter->drawEllipse(tmp.x()-1, tmp.y()-1, 2, 2);
 
@@ -136,6 +137,22 @@ void QAxis::clearChart()
 void QAxis::addCurve(QString title)
 {
     m_curveList.insert(title, new Curve(title));
+}
+
+QPointF QAxis::mapToAxis(qreal tmpX, qreal tmpY) const
+{
+    double x = (tmpX - m_xMin)/m_xValueRange * m_xRange + m_xPosMin/* - 0.5*/;
+    double y;
+
+    if( m_direction == "down")
+        y = (tmpY - m_yMin)/m_yValueRange * m_yRange + m_yPosMin/* - 0.5*/;
+    else
+        y = -(tmpY - m_yMin)/m_yValueRange * m_yRange /* + m_yPosMin + 0.5 */;
+
+    x = x+ m_xPosMin;
+    y = y+ m_yPosMax;
+    QPointF tmpPoint(x, y);
+    return tmpPoint;
 }
 
 void QAxis::addData(QString curveName, double tmpX, double tmpY)

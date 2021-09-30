@@ -25,6 +25,7 @@ public:
     ~MainWindow();
 private:
     int getRadius();
+    void updateCurve();
 protected:
     void resizeEvent(QResizeEvent *event);
 public slots:

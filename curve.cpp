@@ -1,6 +1,7 @@
 #include "curve.h"
 #include <QDebug>
 
+
 Curve::Curve(QString title)
 {
     m_title = title;
@@ -55,12 +56,14 @@ void Curve::setCurveStyle(Qt::PenStyle style)
 
 void Curve::addData(QPointF d)
 {
+
     m_data << d;
     m_dataSize = m_data.size();
 }
 
 void Curve::addPosData(QPointF p)
 {
+    qDebug()<<"curv:"<<p;
     m_posData << p;
 }
 
@@ -72,6 +75,7 @@ void Curve::setRawData(const QVector<QPointF> &data, int size)
 
 void Curve::resetPosData(int index, QPointF p)
 {
+    qDebug()<<"curv:"<<"index:"<< index <<",point:"<<p;
     m_posData.replace(index, p);
 }
 

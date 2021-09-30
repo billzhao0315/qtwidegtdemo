@@ -61,6 +61,7 @@ public:
     void addTargetLine(QString lineName);
 
     void upDate();
+    QPointF mapToAxis(qreal tempX, qreal tempY) const;
 
     inline double getAxisXmin()
     {

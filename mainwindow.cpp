@@ -10,6 +10,7 @@
 #include<QVBoxLayout>
 #include<QLineEdit>
 #include<QTreeWidget>
+#include<QDebug>
 
 #define RADIUS 100
 #define SCENEX 0
@@ -32,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     item[0] = NULL;
     lineItem[0] = NULL;
-    on_spinBox_valueChanged(m_steelNum);
+
     m_axis = new QAxis(SCENEX, SCENEY, SCENEWidth, SCENEHEIGHT);
     {
         m_axis->setXValueRange(0, 255);
@@ -47,12 +48,13 @@ MainWindow::MainWindow(QWidget *parent) :
         m_axis->addCurve("testCurve");
         m_axis->setGridShow(true);
         m_axis->addData("testCurve", 0, 0);
-        m_axis->addData("testCurve", 21, 21);
-        m_axis->addData("testCurve", 106, 106);
-        m_axis->addData("testCurve", 121, 121);
-        m_axis->addData("testCurve", 255, 255);
+        m_axis->addData("testCurve", 30, 30);
+        m_axis->addData("testCurve", 60, 60);
+        m_axis->addData("testCurve", 90, 90);
+        m_axis->addData("testCurve", 120, 120);
     }
     m_scene->addItem(m_axis);
+    on_spinBox_valueChanged(m_steelNum);
     m_view = new MyQGraphicsView(m_scene);
     m_view->show();
     m_view->setToolTip("view test");
@@ -97,6 +99,7 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     m_scene->setSceneRect(-30,-10,m_view->size().width()-30, m_view->size().height()-20);
     m_axis->setAxisSize(m_view->size().width()-30, m_view->size().height()-20);
     //item[m_steelNum-1]->setPos(m_view->size().width()-60, m_view->size().height()-50);
+    updateCurve();
     QMainWindow::resizeEvent(event);
 }
 
@@ -205,7 +208,13 @@ void MainWindow::on_spinBox_valueChanged(int num)
     for(int i=0; i<m_steelNum; i++)
     {
         item[i] = new MyItem(radius, RADIUS,i);
-        item[i]->setPos(startPointX+ widthSpace*i, (startPointY+heightSpace*i));
+//        qreal itemX = startPointX+ widthSpace*i;
+//        qreal itemY = (startPointY+heightSpace*i);
+        qreal itemX = i*30;
+        qreal itemY = i*30;
+        QPointF point = m_axis->mapToAxis(itemX, itemY);
+        qDebug()<<"item point"<<point;
+        item[i]->setPos(point);
         item[i]->setToolTip(QString::number(i));
         m_scene->addItem(item[i]);
         QObject::connect(item[i], &MyItem::posChanged, this, &MainWindow::posChanged);
@@ -232,4 +241,22 @@ int MainWindow::getRadius()
     else
         radius = 15;
     return radius;
+}
+void MainWindow::updateCurve()
+{
+    for (int i = 0; i < m_steelNum; ++i) {
+        qreal itemX = i*30;
+        qreal itemY = i*30;
+        QPointF point = m_axis->mapToAxis(itemX, itemY);
+        item[i]->setPos(point);
+    }
+    for(int i=0; i<m_steelNum-1; i++)
+    {
+        m_scene->removeItem(lineItem[i]);
+        lineItem[i] = new MyLineItem(item[i]->pos().x(), item[i]->pos().y(), item[i+1]->pos().x(), item[i+1]->pos().y(), i);
+                //m_scene->addLine(item[i]->pos().x(), item[i]->pos().y(), item[i+1]->pos().x(), item[i+1]->pos().y());
+        m_scene->addItem( lineItem[i] );
+        QObject::connect(lineItem[i], &MyLineItem::addNodeItem, this, &MainWindow::addNodeItem);
+    }
+    //m_scene->update();
 }
